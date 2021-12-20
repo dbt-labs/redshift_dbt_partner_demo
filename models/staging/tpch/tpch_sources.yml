@@ -1,0 +1,185 @@
+version: 2
+
+sources:
+  - name: tpch
+    database: dev
+    schema: tpch_s3_test
+    loader: s3
+    loaded_at_field: collector_tstamp
+  
+    tables:
+      - name: customer
+        external:
+          location: "s3://tpch-sample-data/tpch_data/customer"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"
+        columns:
+          - name: c_custkey
+            data_type: varchar(255)
+          - name: c_name
+            data_type: varchar(255)
+          - name: c_address
+            data_type: varchar(255)
+          - name: c_nationkey
+            data_type: varchar(255)
+          - name: c_phone
+            data_type: varchar(255)         
+          - name: c_acctbal
+            data_type: varchar(255)
+          - name: c_mktsegment
+            data_type: varchar(255)
+          - name: c_comment
+            data_type: varchar(255)                       
+      - name: lineitem
+        external:
+          location: "s3://tpch-sample-data/tpch_data/lineitem"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"
+        columns:
+          - name: l_orderkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: l_partkey
+            data_type: varchar(255)
+          - name: l_suppkey
+            data_type: varchar(255)
+          - name: l_linenumber
+            data_type: varchar(255)
+          - name: l_quantity
+            data_type: varchar(255)            
+          - name: l_extendedprice
+            data_type: varchar(255)
+          - name: l_discount
+            data_type: varchar(255)
+          - name: l_tax
+            data_type: varchar(255)                       
+          - name: l_returnflag
+            data_type: varchar(255)  
+          - name: l_linestatus
+            data_type: varchar(255)   
+          - name: l_shipdate
+            data_type: varchar(255)  
+          - name: l_commitdate
+            data_type: varchar(255)
+          - name: l_receiptdate
+            data_type: varchar(255)   
+          - name: l_shipinstruct
+            data_type: varchar(255)  
+          - name: l_shipmode
+            data_type: varchar(255)         
+      - name: nation
+        external:
+          location: "s3://tpch-sample-data/tpch_data/nation"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"
+        columns:
+          - name: n_nationkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: n_name
+            data_type: varchar(255)
+          - name: n_regionkey
+            data_type: varchar(255)
+          - name: n_comment
+            data_type: varchar(255)  
+      - name: orders
+        external:
+          location: "s3://tpch-sample-data/tpch_data/orders"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"  
+        columns:
+          - name: o_orderkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: o_custkey
+            data_type: varchar(255)
+          - name: o_orderstatus
+            data_type: varchar(255)
+          - name: o_totalprice
+            data_type: varchar(255)
+          - name: o_orderdate
+            data_type: varchar(255)
+          - name: o_orderpriority
+            data_type: varchar(255)
+          - name: o_clerk
+            data_type: varchar(255)
+          - name: o_shippriority
+            data_type: varchar(255)
+          - name: o_comment
+            data_type: varchar(255)
+      - name: part
+        external:
+          location: "s3://tpch-sample-data/tpch_data/part"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"
+        columns:
+          - name: p_partkey
+            description: "primary key"
+            data_type: varchar(255)
+          - name: p_name
+            data_type: varchar(255)
+          - name: p_mfgr
+            data_type: varchar(255)
+          - name: p_brand
+            data_type: varchar(255)
+          - name: p_type
+            data_type: varchar(255)
+          - name: p_size
+            data_type: varchar(255)
+          - name: p_container
+            data_type: varchar(255)
+          - name: p_retailprice
+            data_type: varchar(255)
+          - name: p_comment
+            data_type: varchar(255)
+      - name: partsupp
+        external:
+          location: "s3://tpch-sample-data/tpch_data/partsupp"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')" 
+        columns:
+          - name: ps_partkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: ps_suppkey
+            data_type: varchar(255)
+          - name: ps_availqty
+            data_type: varchar(255)
+          - name: ps_supplycost
+            data_type: varchar(255)
+          - name: ps_comment
+            data_type: varchar(255)
+      - name: region
+        external:
+          location: "s3://tpch-sample-data/tpch_data/region"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"
+        columns:
+          - name: r_regionkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: r_name
+            data_type: varchar(255)
+          - name: r_comment
+            data_type: varchar(255)
+      - name: supplier
+        external:
+          location: "s3://tpch-sample-data/tpch_data/supplier"        # amazon s3 path prefix
+          row_format: serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+          table_properties: "('skip.header.line.count'='1')"  
+        columns:
+          - name: s_suppkey
+            data_type: varchar(255)
+            description: "primary key"
+          - name: s_name
+            data_type: varchar(255)
+          - name: s_nationkey
+            data_type: varchar(255)
+          - name: s_phone
+            data_type: varchar(255)
+          - name: s_acctbal
+            data_type: varchar(255)
+          - name: s_comment
+            data_type: varchar(255)
+          - name: s_address
+            data_type: varchar(255)           
