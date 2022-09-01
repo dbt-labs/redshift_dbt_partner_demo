@@ -3,7 +3,8 @@
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
 name: 'redshift_dbt_demo'
-version: '1.0.0'
+version: '1.2.0'
+require-dbt-version: '>=1.2.0'
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
@@ -36,6 +37,8 @@ models:
   redshift_dbt_demo:
       # Applies to all files under models/example/
       +bind: false
+      +grants:
+        select: ['group transformer']
       staging:
           materialized: table
 
