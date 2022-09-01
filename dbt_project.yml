@@ -35,6 +35,8 @@ models:
   redshift_dbt_demo:
       # Applies to all files under models/example/
       +bind: false
+      +grants:
+        select: ['group transformer']
       staging:
           materialized: table
 
