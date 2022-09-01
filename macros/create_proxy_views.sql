@@ -1,6 +1,6 @@
 {% macro create_proxy_views(models) %}
 
-{% set prod_schema = "production" %} -- This is the schema name of our production schema
+{% set prod_schema = "analytics" %} -- This is the schema name of our production schema
 {% if prod_schema == target.schema %}
     {% do log("This macro shouldn't be run on the production target. Exiting without actions.", info=True) %}
 {% else %}
