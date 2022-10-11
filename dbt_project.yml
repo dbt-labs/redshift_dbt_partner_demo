@@ -27,6 +27,9 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
 
 
+on-run-end:
+  - "{{ grant_usage_on_schemas(schemas, 'group transformer') }}"
+
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
