@@ -1,10 +1,51 @@
-{% macro create_proxy_views(models) %}
+{% macro bfs(model_name) -%}
+    {% set depends_on = {} %}
+    {% for node_name, node_value in graph.nodes.items() -%}
+        {% do depends_on.update({node_name: node_value['depends_on']['nodes']}) %}
+    {%- endfor %}
 
-{% set prod_schema = "analytics" %} -- This is the schema name of our production schema
+    {% set start_node = 'model.' ~ project_name ~ '.' ~ model_name %}
+
+    {% set queue = [start_node] %}
+    {% set upstream_nodes = [] %}
+    {% for _ in range(1, 10000) %}
+        {% if queue|length == 0 %}
+            {{ return(upstream_nodes) }}
+        {% endif %}
+
+        {% set node_name = queue.pop() %}
+        {% for upstream_node_name in depends_on.get(node_name, []) %}
+            {% if upstream_node_name.startswith('model.') and upstream_node_name not in upstream_nodes %}
+                {% do upstream_nodes.append(upstream_node_name) %}
+                {% do queue.append(upstream_node_name) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{%- endmacro %}
+
+{% macro create_proxy_views(model_name, production_schema='analytics') %}
+
+{% set upstream_nodes = bfs(model_name) %}
+
+{# then spit out the dictionary format needed for create_proxy_views() from Stephan #}
+
+{% set models = [] %}
+
+{% for node_name in upstream_nodes -%}
+    {% do models.append(
+        {
+            'config': graph.nodes[node_name]['config'],
+            'alias': graph.nodes[node_name]['alias']
+        }
+    ) %}
+{%- endfor %}
+
+{% set prod_schema = production_schema %} -- This is the schema name of our production schema
 {% if prod_schema == target.schema %}
     {% do log("This macro shouldn't be run on the production target. Exiting without actions.", info=True) %}
 {% else %}
     {% for model in models %}
+        {{ model | tojson }}
         {% set relation_identifier = model["alias"] %}
         {% set relation_sub_schema = model["config"]["schema"] %}
         {% set relation_schema = target.schema + "_" + relation_sub_schema if relation_sub_schema else target.schema %}
