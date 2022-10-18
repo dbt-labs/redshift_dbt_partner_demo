@@ -16,7 +16,7 @@
 
         {% set node_name = queue.pop() %}
         {% for upstream_node_name in depends_on.get(node_name, []) %}
-            {% if upstream_node_name.startswith('model.') and upstream_node_name not in upstream_nodes %}
+            {% if upstream_node_name.startswith('model.') and upstream_node_name not in upstream_nodes and upstream_node_name not in queue %}
                 {% do upstream_nodes.append(upstream_node_name) %}
                 {% do queue.append(upstream_node_name) %}
             {% endif %}
