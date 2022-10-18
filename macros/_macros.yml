@@ -4,11 +4,17 @@ macros:
   - name: create_proxy_views
     description: '{{ doc("create_proxy_views") }}'
     arguments:
-      - name: models
-        type: json string
-        description: the json string produced from `dbt ls --output json` and filtered by `jq`
+      - name: model_name
+        type: string
+        description: the name of the model who's upstream dependencies should be built as views from production
       - name: production_schema
         type: string
         description: >- 
-          "The name of the production schema used.
+          "The name of the production schema used, default `production`,
           `WARNING`: this macro should never run in production!"
+  - name: bfs
+    description: a helper macro that generates upstream dependencies for a specific model from the warehouse DAG
+    arguments:
+      - name: model_name
+        type: string
+        description: the name of the model to identify its upstream dependent models

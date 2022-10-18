@@ -1,4 +1,5 @@
 {% macro bfs(model_name) -%}
+    
     {% set depends_on = {} %}
     {% for node_name, node_value in graph.nodes.items() -%}
         {% do depends_on.update({node_name: node_value['depends_on']['nodes']}) %}
@@ -23,14 +24,10 @@
     {% endfor %}
 {%- endmacro %}
 
-{% macro create_proxy_views(model_name, production_schema='analytics') %}
+{% macro create_proxy_views(model_name, production_schema='production') %}
 
 {% set upstream_nodes = bfs(model_name) %}
-
-{# then spit out the dictionary format needed for create_proxy_views() from Stephan #}
-
 {% set models = [] %}
-
 {% for node_name in upstream_nodes -%}
     {% do models.append(
         {
