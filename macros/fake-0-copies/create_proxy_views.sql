@@ -1,32 +1,6 @@
-{% macro bfs(model_name) -%}
-    
-    {% set depends_on = {} %}
-    {% for node_name, node_value in graph.nodes.items() -%}
-        {% do depends_on.update({node_name: node_value['depends_on']['nodes']}) %}
-    {%- endfor %}
+{% macro create_proxy_views(model_name, production_schema) %}
 
-    {% set start_node = 'model.' ~ project_name ~ '.' ~ model_name %}
-
-    {% set queue = [start_node] %}
-    {% set upstream_nodes = [] %}
-    {% for _ in range(1, 10000) %}
-        {% if queue|length == 0 %}
-            {{ return(upstream_nodes) }}
-        {% endif %}
-
-        {% set node_name = queue.pop() %}
-        {% for upstream_node_name in depends_on.get(node_name, []) %}
-            {% if upstream_node_name.startswith('model.') and upstream_node_name not in upstream_nodes and upstream_node_name not in queue %}
-                {% do upstream_nodes.append(upstream_node_name) %}
-                {% do queue.append(upstream_node_name) %}
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-{%- endmacro %}
-
-{% macro create_proxy_views(model_name, production_schema='production') %}
-
-{% set upstream_nodes = bfs(model_name) %}
+{% set upstream_nodes = breadth_first_search(model_name) %}
 {% set models = [] %}
 {% for node_name in upstream_nodes -%}
     {% do models.append(
@@ -37,7 +11,12 @@
     ) %}
 {%- endfor %}
 
-{% set prod_schema = production_schema %} -- This is the schema name of our production schema
+{% if production_schema is defined %}
+    {% set prod_schema = production_schema %}
+{% else %}
+    {{ exceptions.raise_compiler_error("Argument production_schema is undefined. Please reference the production_schema") }}
+{%- endif -%}
+
 {% if prod_schema == target.schema %}
     {% do log("This macro shouldn't be run on the production target. Exiting without actions.", info=True) %}
 {% else %}

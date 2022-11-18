@@ -9,11 +9,10 @@ macros:
         description: the name of the model who's upstream dependencies should be built as views from production
       - name: production_schema
         type: string
-        description: >- 
-          "The name of the production schema used, default `production`,
-          `WARNING`: this macro should never run in production!"
-  - name: bfs
-    description: a helper macro that generates upstream dependencies for a specific model from the warehouse DAG
+        description: The name of the schema used in production
+
+  - name: breadth_first_search
+    description: '{{ doc("breadth_first_search") }}'
     arguments:
       - name: model_name
         type: string
