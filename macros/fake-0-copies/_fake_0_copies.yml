@@ -1,0 +1,19 @@
+version: 2
+
+macros:
+  - name: create_proxy_views
+    description: '{{ doc("create_proxy_views") }}'
+    arguments:
+      - name: model_name
+        type: string
+        description: the name of the model who's upstream dependencies should be built as views from production
+      - name: production_schema
+        type: string
+        description: The name of the schema used in production
+
+  - name: breadth_first_search
+    description: '{{ doc("breadth_first_search") }}'
+    arguments:
+      - name: model_name
+        type: string
+        description: the name of the model to identify its upstream dependent models
