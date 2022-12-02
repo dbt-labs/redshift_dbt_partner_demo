@@ -3,7 +3,8 @@
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
 name: 'redshift_dbt_demo'
-version: '1.0.0'
+version: '1.3.0'
+require-dbt-version: '>=1.3.0'
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
@@ -18,12 +19,16 @@ test-paths: ["tests"]
 seed-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
 
 target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
 
+
+on-run-end:
+  - "{{ grant_usage_on_schemas(schemas, 'group transformer') }}"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -35,6 +40,8 @@ models:
   redshift_dbt_demo:
       # Applies to all files under models/example/
       +bind: false
+      +grants:
+        select: ['group transformer']
       staging:
           materialized: table
 
