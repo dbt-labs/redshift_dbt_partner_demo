@@ -1,8 +1,13 @@
 {{
-    config(
-        materialized = 'table',
-        tags=['finance']
-    )
+  config({
+    "materialized":"table",
+    "post-hook": [
+        "{{ redshift.compress_table(this.schema, this.table, drop_backup=false) }}"
+    ],
+    "tags":[
+        'finance'
+    ]
+  })
 }}
 
 with orders as (
