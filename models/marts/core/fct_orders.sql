@@ -2,7 +2,7 @@
   config({
     "materialized":"table",
     "post-hook": [
-        "{{ redshift.compress_table(this.schema, this.table, drop_backup=false) }}"
+        "{{ redshift.compress_table(this.schema, this.table, drop_backup=true) }}"
     ],
     "tags":[
         'finance'
