@@ -7,7 +7,8 @@ with source as (
 renamed as (
 
     select
-    
+        -- generate_surrogate_key caluclates different to legacy surrogate_key
+        -- https://docs.getdbt.com/guides/migration/versions/upgrading-to-dbt-utils-v1.0#changes-to-surrogate_key    
         {{ dbt_utils.generate_surrogate_key(
             ['l_orderkey', 
             'l_linenumber']) }}
