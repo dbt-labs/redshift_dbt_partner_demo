@@ -1,5 +1,8 @@
+select 'this model needs to be fixed' as table_comment
+
 /* Create a pivot table with dynamic columns based on the parts that are in the system */
 
+/*
 {%- call statement('result', fetch_result=True) -%}
 
     {# this pulls the unique part names from the dim_part table #}
@@ -33,3 +36,4 @@ from
         on fct_order_items.part_key = dim_parts.part_key 
 
 group by 1
+*/
