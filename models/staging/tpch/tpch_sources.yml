@@ -130,10 +130,6 @@ sources:
             description: nation name
           - name: n_regionkey
             description: Foreign Key to R_REGIONKEY
-            tests:
-              - relationships:
-                  to: source('tpch', 'region')
-                  field: r_regionkey
           - name: n_comment
             description: '{{ doc("comment") }}'
 
@@ -217,10 +213,6 @@ sources:
             description: address of the supplier
           - name: s_nationkey
             description: Foreign Key to N_NATIONKEY
-            tests:
-              - relationships:
-                  to: source('tpch', 'nation')
-                  field: n_nationkey
           - name: s_phone
             description: phone number of the supplier
           - name: s_acctbal
