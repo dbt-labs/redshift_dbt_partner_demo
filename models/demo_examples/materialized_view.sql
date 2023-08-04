@@ -1,8 +1,8 @@
 {{
     config(
         materialized='materialized_view',
-        auto_refresh = 'false',
         on_configuration_change = 'apply',
+        auto_refresh=False
     )
 }}
 
